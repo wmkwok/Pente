@@ -5,6 +5,7 @@
 import random
 import copy
 import sys
+import os
 from gameAI import *
 
 def main():
@@ -12,7 +13,6 @@ def main():
     
     ##game loop
     while True:
-        print "GAME LOOP"
         ##figure out who goes first
         turn = whoGoesFirst()
         ##0 is black and 1 is white, white always goes first
@@ -26,10 +26,9 @@ def main():
         ##loop for turns
         while True:
             if turn == 'computer':
+                os.system('clear')
                 drawBoard(gameBoard)
-                print "Computer's turn please wait..."
                 move = getComputerMove(gameBoard, computerTile)
-                print "Computer's move is: ", move[0]+1, move[1]+1
                 while move is None:
                     print 'Move is None type error.'
                     return
@@ -41,6 +40,7 @@ def main():
                 turn = 'human'
                 
             else:
+                os.system('clear')
                 drawBoard(gameBoard)
                 move = getHumanMove(gameBoard)
                 makeMove(gameBoard, humanTile, move)
@@ -76,7 +76,14 @@ def whoGoesFirst():
 def getHumanMove(board):
     ##asks the player to make a move
     while True:
-        (moveX, moveY) = raw_input("Please make a move or q to quit(ex 1 2): ").split()
+        if getPrevMove() == None:
+            print "No previous computer move, You're the first!"
+        else:
+            print "Computer's move: ", getPrevMove()[0]+1, getPrevMove()[1]+1
+        try:
+            (moveX, moveY) = raw_input("Please make a move or <q q> to quit(ex 1 2): ").split()
+        except ValueError:
+            continue
         if moveX.lower().startswith('q'):
             print "exiting game..."
             sys.exit()

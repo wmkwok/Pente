@@ -1,6 +1,7 @@
 import sys
 import copy
 
+prevMove = None
 n = 10
 tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
          ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'], \
@@ -15,9 +16,11 @@ tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
 print tboard[0][1]
 
 def getComputerMove(board, tile):
+    global prevMove
     for x in range(n):
         for y in range(n):
             if isValidMove(board, (x, y)):
+                prevMove = (x, y)
                 return (x, y)
 
 def drawBoard(board):
@@ -64,6 +67,9 @@ def isValidMove(board, move):
 ##change board state, move is tuple(x, y)
 def makeMove(board, player, move):
     board[move[0]][move[1]] = player
+
+def getPrevMove():
+    return prevMove
 
 def isBoardFull(board):
     for row in range(n):
