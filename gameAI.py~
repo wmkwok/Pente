@@ -2,7 +2,7 @@ import sys
 import copy
 
 n = 10
-tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
+board = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
          ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'], \
          ['1', '.', '0', '.', '.', '1', '.', '0', '.', '.'], \
          ['.', '.', '.', '.', '0', '.', '.', '.', '.', '0'], \
@@ -12,15 +12,8 @@ tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
          ['1', '.', '0', '.', '.', '1', '.', '0', '.', '.'], \
          ['.', '.', '.', '.', '0', '.', '.', '.', '.', '0'], \
          ['.', '.', '0', '1', '.', '.', '.', '0', '1', '.']]
-print tboard[0][1]
 
-def getComputerMove(board, tile):
-    for x in range(n):
-        for y in range(n):
-            if isValidMove(board, (x, y)):
-                return (x, y)
-
-def drawBoard(board):
+def newBoard(board):
     boarder = ""
 
     ##add in the top border
@@ -50,31 +43,22 @@ def drawBoard(board):
 
 ##creates a fresh board
 def getNewBoard():
-    newBoard = []
-    theRow = []
-    for i in range(n):
-        theRow.append('.')
-    for j in range(n):
-        newBoard.append(copy.deepcopy(theRow))
-    return newBoard
+    pass
+
+##change board state
+makeMove(board, player, column):
+    pass
 
 def isValidMove(board, move):
-    return (board[move[0]][move[1]] == '.')
-
-##change board state, move is tuple(x, y)
-def makeMove(board, player, move):
-    board[move[0]][move[1]] = player
+    pass
 
 def isBoardFull(board):
-    for row in range(n):
-        for col in range(n):
-            if board[row][col] == '.':
-                return False
-    return True
+    pass
 
 def isWinner(board, tile):
-    return False
+    pass
 
+newBoard(board)
 
 '''
 
