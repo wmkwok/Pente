@@ -32,8 +32,8 @@ def main():
                 while move is None:
                     print 'Move is None type error.'
                     return
-                
-                makeMove(gameBoard, computerTile, move)
+                if isValidMove(gameBoard, move):
+                    makeMove(gameBoard, computerTile, move)
                 if isWinner(gameBoard, computerTile):
                     winner = 'computer'
                     break
@@ -42,8 +42,9 @@ def main():
             else:
                 os.system('clear')
                 drawBoard(gameBoard)
-                move = getHumanMove(gameBoard)
-                makeMove(gameBoard, humanTile, move)
+                move = getHumanMove(gameBoard, humanTile)
+                if isValidMove(gameBoard, move):
+                    makeMove(gameBoard, humanTile, move)
                 if isWinner(gameBoard, humanTile):
                     winner = 'human'
                     break
@@ -73,13 +74,17 @@ def whoGoesFirst():
     else:
         return 'human'
 
-def getHumanMove(board):
+def getHumanMove(board, tile):
     ##asks the player to make a move
     while True:
         if getPrevMove() == None:
             print "No previous computer move, You're the first!"
         else:
             print "Computer's move: ", getPrevMove()[0]+1, getPrevMove()[1]+1
+        if tile == '0':
+            print "Your color is Black"
+        else:
+            print "Your color is White"
         try:
             (moveX, moveY) = raw_input("Please make a move or <q q> to quit(ex 1 2): ").split()
         except ValueError:
