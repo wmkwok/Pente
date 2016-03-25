@@ -34,8 +34,6 @@ def main():
                     return
                 if isValidMove(gameBoard, move):
                     makeMove(gameBoard, computerTile, move)
-                else:
-                    continue
                 if isWinner(gameBoard, computerTile):
                     winner = 'computer'
                     break
@@ -47,8 +45,6 @@ def main():
                 move = getHumanMove(gameBoard, humanTile)
                 if isValidMove(gameBoard, move):
                     makeMove(gameBoard, humanTile, move)
-                else:
-                    continue
                 if isWinner(gameBoard, humanTile):
                     winner = 'human'
                     break
