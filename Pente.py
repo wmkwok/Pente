@@ -22,7 +22,8 @@ def main():
             humanTile, computerTile = ('1', '0')
         print "%s goes first" %turn
         gameBoard = getNewBoard()
-        
+        humanCaptures = 0
+        computerCaptures = 0
         ##loop for turns
         while True:
             if turn == 'computer':

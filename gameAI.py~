@@ -22,6 +22,8 @@ def getComputerMove(board, tile):
             if isValidMove(board, (x, y)):
                 prevMove = (x, y)
                 return (x, y)
+'''-----------------------------------------------------Game Functions-----------------------------------------------'''
+##These game functions are the essential functions that help the game do move and detect winnings
 
 def drawBoard(board):
     boarder = ""
@@ -121,7 +123,7 @@ def isCaptureMove(board, player, move):
             board[move[0]+2][move[1]+2] = '.'
         
     ##check other diagonal captures
-        if (move[0] > 2 and move[1] > 2 and\
+        if (move[0] > 2 and move[1] < n-3 and\
                 board[move[0]-1][move[1]+1] == unplayer and \
                 board[move[0]-2][move[1]+2] == unplayer and \
                 board[move[0]-3][move[1]+3] == player):
