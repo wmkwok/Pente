@@ -28,6 +28,7 @@ def main():
         while True:
             if turn == 'computer':
                 os.system('clear')
+                print "Computer is thinking..."
                 drawBoard(gameBoard)
                 move = getComputerMove(gameBoard, computerTile)
                 while move is None:
@@ -35,6 +36,8 @@ def main():
                     return
                 if isValidMove(gameBoard, move):
                     makeMove(gameBoard, computerTile, move)
+                    os.system('clear')
+                    drawBoard(gameBoard)
                 else:
                     continue
                 if isWinner(gameBoard, computerTile):

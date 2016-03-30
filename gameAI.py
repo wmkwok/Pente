@@ -1,22 +1,24 @@
 import sys
 import copy
+import timeit
 
 prevMove = None
 n = 10
 
 '''
 A game board looks like this
-[['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
-['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'], \
-['1', '.', '0', '.', '.', '1', '.', '0', '.', '.'], \
-['.', '.', '.', '.', '0', '.', '.', '.', '.', '0'], \
-['.', '.', '0', '1', '.', '.', '.', '0', '1', '.'], \
-['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
-['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'], \
-['1', '.', '0', '.', '.', '1', '.', '0', '.', '.'], \
-['.', '.', '.', '.', '0', '.', '.', '.', '.', '0'], \
-['.', '.', '0', '1', '.', '.', '.', '0', '1', '.']]
 '''
+tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
+          ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'], \
+          ['1', '.', '0', '.', '.', '1', '.', '0', '.', '.'], \
+          ['.', '.', '.', '.', '0', '.', '.', '.', '.', '0'], \
+          ['.', '.', '0', '1', '.', '.', '.', '0', '1', '.'], \
+          ['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
+          ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'], \
+          ['1', '.', '0', '.', '.', '1', '.', '0', '.', '.'], \
+          ['.', '.', '.', '.', '0', '.', '.', '.', '.', '0'], \
+          ['.', '.', '0', '1', '.', '.', '.', '0', '1', '.']]
+
 ##UNCHECKED:
 ##gen child
 ##minValue
@@ -61,7 +63,10 @@ def generateChildren(board, player):
 ##I think we should take out depth at the end.
 ## also, would it be nice to do another search alg? or is AB always good?
 def AlphaBeta(board, depth, player):
+    tic=timeit.default_timer()
     m = minValue((board, -1), depth, player, (float("-inf"), -1), (float("inf"), -1))
+    toc=timeit.default_timer()
+    print "Processing time: ", tic-toc
     return m[1]
 
 def maxValue(board, depth, player, alpha, beta):
@@ -76,7 +81,7 @@ def maxValue(board, depth, player, alpha, beta):
         if player == '1':
             return (heuristic(board[0]), board[1])
         else:
-            return (heuristic(board[0]), board[1])
+            return (heuristic(board[0]) * -1, board[1])
     ##for each children find next
     for succ in generateChildren(board[0], player):
         m = minValue(succ, depth-1, unplayer, alpha, beta)
@@ -86,7 +91,6 @@ def maxValue(board, depth, player, alpha, beta):
             return alpha
     return alpha
     
-
 def minValue(board, depth, player, alpha, beta):
     ##figure the opposite tile
     if player == '1':
@@ -99,7 +103,7 @@ def minValue(board, depth, player, alpha, beta):
         if player == '1':
             return (heuristic(board[0]), board[1])
         else:
-            return (heuristic(board[0]), board[1])
+            return (heuristic(board[0]) * -1, board[1])
     ##for each children find next
     for succ in generateChildren(board[0], player):
         m = maxValue(succ, depth-1 , unplayer, alpha, beta)
@@ -120,66 +124,78 @@ def heuristic(board):
 
     # check horizontal spaces
     for y in range(n):
-        for x in range(n):
-            if (board[x][y] == tile or board[x][y] == ' ') and \
-               (board[x+1][y] == tile or board[x+1][y] == ' ') and \
-               (board[x+2][y] == tile or board[x+2][y] == ' ') and \
-               (board[x+3][y] == tile or board[x+3][y] == ' '):
+        for x in range(n-4):
+            if (board[x][y] == tile or board[x][y] == '.') and \
+               (board[x+1][y] == tile or board[x+1][y] == '.') and \
+               (board[x+2][y] == tile or board[x+2][y] == '.') and \
+               (board[x+3][y] == tile or board[x+3][y] == '.') and \
+               (board[x+4][y] == tile or board[x+4][y] == '.'):
                 win_count += 1
 
-            if (board[x][y] == untile or board[x][y] == ' ') and \
-               (board[x+1][y] == untile or board[x+1][y] == ' ') and \
-               (board[x+2][y] == untile or board[x+2][y] == ' ') and \
-               (board[x+3][y] == untile or board[x+3][y] == ' '):
+            if (board[x][y] == untile or board[x][y] == '.') and \
+               (board[x+1][y] == untile or board[x+1][y] == '.') and \
+               (board[x+2][y] == untile or board[x+2][y] == '.') and \
+               (board[x+3][y] == untile or board[x+3][y] == '.') and \
+               (board[x+4][y] == untile or board[x+4][y] == '.'):
                 lose_count += 1
 
     # check vertical spaces
     for x in range(n):
-        for y in range(n):
-            if (board[x][y] == tile or board[x][y] == ' ') and \
-               (board[x][y+1] == tile or board[x][y+1] == ' ') and \
-               (board[x][y+2] == tile or board[x][y+2] == ' ') and \
-               (board[x][y+3] == tile or board[x][y+3] == ' '):
+        for y in range(n-4):
+            if (board[x][y] == tile or board[x][y] == '.') and \
+               (board[x][y+1] == tile or board[x][y+1] == '.') and \
+               (board[x][y+2] == tile or board[x][y+2] == '.') and \
+               (board[x][y+3] == tile or board[x][y+3] == '.') and \
+               (board[x][y+4] == tile or board[x][y+4] == '.'):
                 win_count += 1
 
-            if (board[x][y] == untile or board[x][y] == ' ') and\
-               (board[x][y+1] == untile or board[x][y+1] == ' ') and \
-               (board[x][y+2] == untile or board[x][y+2] == ' ') and \
-               (board[x][y+3] == untile or board[x][y+3] == ' '):
+            if (board[x][y] == untile or board[x][y] == '.') and\
+               (board[x][y+1] == untile or board[x][y+1] == '.') and \
+               (board[x][y+2] == untile or board[x][y+2] == '.') and \
+               (board[x][y+3] == untile or board[x][y+3] == '.') and \
+               (board[x][y+4] == untile or board[x][y+4] == '.'):
                 lose_count += 1
 
     # check / diagonal spaces
-    for x in range(n - 3):
-        for y in range(3, n):
-            if (board[x][y] == tile or board[x][y] == ' ') and \
-               (board[x+1][y-1] == tile or board[x+1][y-1] == ' ') and \
-               (board[x+2][y-2] == tile or board[x+2][y-2] == ' ') and \
-               (board[x+3][y-3] == tile or board[x+3][y-3] == ' '):
+    for x in range(n - 4):
+        for y in range(4, n):
+            if (board[x][y] == tile or board[x][y] == '.') and \
+               (board[x+1][y-1] == tile or board[x+1][y-1] == '.') and \
+               (board[x+2][y-2] == tile or board[x+2][y-2] == '.') and \
+               (board[x+3][y-3] == tile or board[x+3][y-3] == '.') and \
+               (board[x+4][y-4] == tile or board[x+4][y-4] == '.'):
                 win_count += 1
 
-            if (board[x][y] == untile or board[x][y] == ' ') and \
-               (board[x+1][y-1] == untile or board[x+1][y-1] == ' ') and \
-               (board[x+2][y-2] == untile or board[x+2][y-2] == ' ') and \
-               (board[x+3][y-3] == untile or board[x+3][y-3] == ' '):
+            if (board[x][y] == untile or board[x][y] == '.') and \
+               (board[x+1][y-1] == untile or board[x+1][y-1] == '.') and \
+               (board[x+2][y-2] == untile or board[x+2][y-2] == '.') and \
+               (board[x+3][y-3] == untile or board[x+3][y-3] == '.') and \
+               (board[x+4][y-4] == untile or board[x+4][y-4] == '.'):
                 lose_count += 1
 
     # check \ diagonal spaces
-    for x in range(n - 3):
-        for y in range(n - 3):
-            if (board[x][y] == tile or board[x][y] == ' ') and \
-               (board[x+1][y+1] == tile or board[x+1][y+1] ==  ' ') and \
-               (board[x+2][y+2] == tile or board[x+2][y+2] == ' ') and \
-               (board[x+3][y+3] == tile or board[x+3][y+3] == ' '):
+    for x in range(n - 4):
+        for y in range(n - 4):
+            if (board[x][y] == tile or board[x][y] == '.') and \
+               (board[x+1][y+1] == tile or board[x+1][y+1] ==  '.') and \
+               (board[x+2][y+2] == tile or board[x+2][y+2] == '.') and \
+               (board[x+3][y+3] == tile or board[x+3][y+3] == '.') and \
+               (board[x+4][y+4] == tile or board[x+3][y+4] == '.'):
                 win_count += 1
 
-            if (board[x][y] == untile or board[x][y] == ' ') and \
-               (board[x+1][y+1] == untile or board[x+1][y+1] ==  ' ') and \
-               (board[x+2][y+2] == untile or board[x+2][y+2] == ' ') and \
-               (board[x+3][y+3] == untile or board[x+3][y+3] == ' '):
+            if (board[x][y] == untile or board[x][y] == '.') and \
+               (board[x+1][y+1] == untile or board[x+1][y+1] ==  '.') and \
+               (board[x+2][y+2] == untile or board[x+2][y+2] == '.') and \
+               (board[x+3][y+3] == untile or board[x+3][y+3] == '.') and \
+               (board[x+4][y+4] == untile or board[x+4][y+4] == '.'):
                 lose_count += 1
 
+##    print "heuristic: ", win_count, lose_count, win_count - lose_count
     return win_count - lose_count
+
+##print heuristic(tboard)
     #Given a board, returns the value of that board when evaluated with a heuristic
+
 '''-----------------------------------------------------Game Functions-----------------------------------------------'''
 ##These game functions are the essential functions that help the game do move and detect winnings
 
@@ -187,14 +203,14 @@ def drawBoard(board):
     boarder = ""
 
     ##add in the top border
-    boarder += "$$  "
+    boarder += "$$   "
     for i in range(n*2+1):
         boarder += '-'
     boarder += '\n'
 
     ##add in row
     for row in range(n):
-        boarder += "$$ | "
+        boarder += "$$%d | " %row
         for col in range(n):
             if board[row][col] == '1':
                 boarder += u"\u25CF "
@@ -205,7 +221,7 @@ def drawBoard(board):
         boarder += "|\n"
 
     ##add in the bottom border
-    boarder += "$$  "
+    boarder += "$$   "
     for i in range(n*2+1):
         boarder += '-'
     boarder += '\n'
@@ -340,6 +356,13 @@ def isWinner(board, tile):
 
     return False
 
+'''-------------------------------------------------------TEST SPACE---------------------------------'''
+##Testing how much time it takes to computer AlphaBeta on depth 3
+AlphaBeta(tboard, 3, '1')
+
+
+
+'''--------------------------------------end of test space--------------------------------------'''
 
 '''
 
