@@ -4,6 +4,8 @@ import timeit
 
 prevMove = None
 n = 10
+bcaptures = 0
+wcaptures = 0
 
 '''
 A game board looks like this
@@ -19,16 +21,9 @@ tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
           ['.', '.', '.', '.', '0', '.', '.', '.', '.', '0'], \
           ['.', '.', '0', '1', '.', '.', '.', '0', '1', '.']]
 
-##UNCHECKED:
-##gen child
-##minValue
-##maxValue
-##AlphaBeta
-
 ##UNIMPLEMENTED
 ##captured pairs count
 ## win when 5 capture pairs
-##counter to keep track of pieces of stones left
 ##heuristic <-- this should be last last part
 
 '''---------------------------------------------------AI functions-------------------------------------------------'''
@@ -63,10 +58,10 @@ def generateChildren(board, player):
 ##I think we should take out depth at the end.
 ## also, would it be nice to do another search alg? or is AB always good?
 def AlphaBeta(board, depth, player):
-    tic=timeit.default_timer()
+    tik=timeit.default_timer()
     m = minValue((board, -1), depth, player, (float("-inf"), -1), (float("inf"), -1))
-    toc=timeit.default_timer()
-    print "Processing time: ", tic-toc
+    tok=timeit.default_timer()
+    print "Processing time: ", tok-tik
     return m[1]
 
 def maxValue(board, depth, player, alpha, beta):
@@ -244,78 +239,102 @@ def isValidMove(board, move):
 
 def isCaptureMove(board, player, move):
     ##check to see if the move made is going to capture
+    ccount = 0
     if player == '0':
         unplayer = '1'
     else:
         unplayer = '0'
-        
+
+    captured = False
+
     ##check horizontal captures
-        if (move[1] > 2 and \
-                board[move[0]][move[1]-1] == unplayer and \
-                board[move[0]][move[1]-2] == unplayer and \
-                board[move[0]][move[1]-3] == player):
-            board[move[0]][move[1]-1] = '.'
-            board[move[0]][move[1]-2] = '.'
-            return True
+    if (move[1] > 2 and \
+            board[move[0]][move[1]-1] == unplayer and \
+            board[move[0]][move[1]-2] == unplayer and \
+            board[move[0]][move[1]-3] == player):
+        board[move[0]][move[1]-1] = '.'
+        board[move[0]][move[1]-2] = '.'
+        ccount += 1
         
-        if (move[1] < n-3 and \
-                board[move[0]][move[1]+1] == unplayer and \
-                board[move[0]][move[1]+2] == unplayer and \
-                board[move[0]][move[1]+3] == player):
-            board[move[0]][move[1]+1] = '.'
-            board[move[0]][move[1]+2] = '.'
-            return True
+    if (move[1] < n-3 and \
+            board[move[0]][move[1]+1] == unplayer and \
+            board[move[0]][move[1]+2] == unplayer and \
+            board[move[0]][move[1]+3] == player):
+        board[move[0]][move[1]+1] = '.'
+        board[move[0]][move[1]+2] = '.'
+        ccount += 1
         
     ##check vertical captures
-        if (move[0] > 2 and \
-                board[move[0]-1][move[1]] == unplayer and \
-                board[move[0]-2][move[1]] == unplayer and \
-                board[move[0]-3][move[1]] == player):
-            board[move[0]-1][move[1]] = '.'
-            board[move[0]-2][move[1]] = '.'
-
-        if (move[0] < n-3 and \
-                board[move[0]+1][move[1]] == unplayer and \
-                board[move[0]+2][move[1]] == unplayer and \
-                board[move[0]+3][move[1]] == player):
-            board[move[0]+1][move[1]] = '.'
-            board[move[0]+2][move[1]] = '.'
+    if (move[0] > 2 and \
+            board[move[0]-1][move[1]] == unplayer and \
+            board[move[0]-2][move[1]] == unplayer and \
+            board[move[0]-3][move[1]] == player):
+        board[move[0]-1][move[1]] = '.'
+        board[move[0]-2][move[1]] = '.'
+        ccount += 1
+        
+    if (move[0] < n-3 and \
+            board[move[0]+1][move[1]] == unplayer and \
+            board[move[0]+2][move[1]] == unplayer and \
+            board[move[0]+3][move[1]] == player):
+        board[move[0]+1][move[1]] = '.'
+        board[move[0]+2][move[1]] = '.'
+        ccount += 1
 
     ##check diagonal cpatures
-        if (move[0] > 2 and move[1] > 2 and\
-                board[move[0]-1][move[1]-1] == unplayer and \
-                board[move[0]-2][move[1]-2] == unplayer and \
-                board[move[0]-3][move[1]-3] == player):
-            board[move[0]-1][move[1]-1] = '.'
-            board[move[0]-2][move[1]-2] = '.'
+    if (move[0] > 2 and move[1] > 2 and\
+            board[move[0]-1][move[1]-1] == unplayer and \
+            board[move[0]-2][move[1]-2] == unplayer and \
+            board[move[0]-3][move[1]-3] == player):
+        board[move[0]-1][move[1]-1] = '.'
+        board[move[0]-2][move[1]-2] = '.'
+        ccount += 1
         
-        if (move[0] < n-3 and move[1] < n-3 and\
-                board[move[0]+1][move[1]+1] == unplayer and \
-                board[move[0]+2][move[1]+2] == unplayer and \
-                board[move[0]+3][move[1]+3] == player):
-            board[move[0]+1][move[1]+1] = '.'
-            board[move[0]+2][move[1]+2] = '.'
+    if (move[0] < n-3 and move[1] < n-3 and\
+            board[move[0]+1][move[1]+1] == unplayer and \
+            board[move[0]+2][move[1]+2] == unplayer and \
+            board[move[0]+3][move[1]+3] == player):
+        board[move[0]+1][move[1]+1] = '.'
+        board[move[0]+2][move[1]+2] = '.'
+        ccount += 1
         
     ##check other diagonal captures
-        if (move[0] > 2 and move[1] < n-3 and\
-                board[move[0]-1][move[1]+1] == unplayer and \
-                board[move[0]-2][move[1]+2] == unplayer and \
-                board[move[0]-3][move[1]+3] == player):
-            board[move[0]-1][move[1]+1] = '.'
-            board[move[0]-2][move[1]+2] = '.'
+    if (move[0] > 2 and move[1] < n-3 and\
+            board[move[0]-1][move[1]+1] == unplayer and \
+            board[move[0]-2][move[1]+2] == unplayer and \
+            board[move[0]-3][move[1]+3] == player):
+        board[move[0]-1][move[1]+1] = '.'
+        board[move[0]-2][move[1]+2] = '.'
+        ccount += 1
         
-        if (move[0] < n-3 and move[1] < n-3 and\
-                board[move[0]+1][move[1]-1] == unplayer and \
-                board[move[0]+2][move[1]-2] == unplayer and \
-                board[move[0]+3][move[1]-3] == player):
-            board[move[0]+1][move[1]-1] = '.'
-            board[move[0]+2][move[1]-2] = '.'
-        
+    if (move[0] < n-3 and move[1] < n-3 and\
+            board[move[0]+1][move[1]-1] == unplayer and \
+            board[move[0]+2][move[1]-2] == unplayer and \
+            board[move[0]+3][move[1]-3] == player):
+        board[move[0]+1][move[1]-1] = '.'
+        board[move[0]+2][move[1]-2] = '.'
+        ccount += 1
+
+    return ccount        
 
 ##change board state, move is tuple(x, y)
 def makeMove(board, player, move):
-    isCaptureMove(board, player, move)
+    global wcaptures, bcaptures
+    captures = isCaptureMove(board, player, move)
     board[move[0]][move[1]] = player
+
+
+def makeCMove(board, player, move):
+    global wcaptures, bcaptures
+    captures = isCaptureMove(board, player, move)
+    board[move[0]][move[1]] = player
+    if captures != 0:
+        if player == '0':
+            wcaptures += captures
+        else:
+            bcaptures += captures
+    print bcaptures, wcaptures
+
 
 def getPrevMove():
     return prevMove
@@ -353,12 +372,17 @@ def isWinner(board, tile):
                 return True
 
     ##checking capture pairs
-
+    if tile == '1':
+        if wcaptures >= 5:
+            return True
+    else:
+        if bcaptures >= 5:
+            return True
     return False
 
 '''-------------------------------------------------------TEST SPACE---------------------------------'''
 ##Testing how much time it takes to computer AlphaBeta on depth 3
-AlphaBeta(tboard, 3, '1')
+##AlphaBeta(tboard, 3, '1')
 
 
 

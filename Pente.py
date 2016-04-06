@@ -35,7 +35,7 @@ def main():
                     print 'Move is None type error.'
                     return
                 if isValidMove(gameBoard, move):
-                    makeMove(gameBoard, computerTile, move)
+                    makeCMove(gameBoard, computerTile, move)
                     os.system('clear')
                     drawBoard(gameBoard)
                 else:
@@ -50,7 +50,7 @@ def main():
                 drawBoard(gameBoard)
                 move = getHumanMove(gameBoard, humanTile)
                 if isValidMove(gameBoard, move):
-                    makeMove(gameBoard, humanTile, move)
+                    makeCMove(gameBoard, humanTile, move)
                 else:
                     continue
                 if isWinner(gameBoard, humanTile):
