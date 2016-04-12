@@ -108,8 +108,255 @@ def minValue(board, depth, player, alpha, beta):
             return beta
     return beta
 
-##determine the value of a state
+'''-----------------------------------------------Heuristic III------------------------------------------------------'''
+##determine the value of a state, taking advantage of capturing as many as can be to win.
 def heuristic(board):
+    capture_count = 0
+    ncapture_count = 0
+    
+    tile = '1'
+    untile = '0'
+
+    #check horizontal
+    for y in range(n):
+        for x in range(n-3):
+            if (board[x][y] == tile and board[x+1][y] == untile and \
+               board[x+2][y] == '.') or \
+            (board[x][y] == '.' and board[x+1][y] == untile and \
+               board[x+2][y] == tile):
+                capture_count += 1
+
+            if (board[x][y] == tile and board[x+1][y] == untile and \
+               board[x+2][y] == untile) or \
+               (board[x+1][y] == untile and \
+               board[x+2][y] == untile and board[x+3][y] == tile):
+                capture_count += 2
+
+            if (board[x][y] == untile and board[x+1][y] == tile and \
+               board[x+2][y] == '.') or \
+            (board[x][y] == '.' and board[x+1][y] == tile and \
+               board[x+2][y] == untile):
+                ncapture_count += 1
+
+            if (board[x][y] == untile and board[x+1][y] == tile and \
+               board[x+2][y] == tile) or \
+               (board[x+1][y] == tile and \
+               board[x+2][y] == tile and board[x+3][y] == untile):
+                ncapture_count += 2
+                
+    #check vertical
+    for x in range(n):
+        for y in range(n-2):
+            if (board[x][y] == tile and board[x][y+1] == untile and \
+               board[x][y+1] == '.') or \
+            (board[x][y] == '.' and board[x][y+1] == untile and \
+               board[x][y+1] == tile):
+                capture_count += 1
+
+            if (board[x][y] == tile and board[x][y+1] == untile and \
+               board[x][y+2] == untile) or \
+               (board[x][y] == untile and \
+               board[x][y+1] == untile and board[x][y+2] == tile):
+                capture_count += 2
+
+            if (board[x][y] == untile and board[x][y+1] == tile and \
+               board[x][y+2] == '.') or \
+            (board[x][y] == '.' and board[x][y+1] == tile and \
+               board[x][y+2] == untile):
+                ncapture_count += 1
+
+            if (board[x][y] == untile and board[x][y+1] == tile and \
+               board[x][y+2] == tile) or \
+               (board[x][y] == tile and \
+               board[x][y+1] == tile and board[x][y+2] == untile):
+                ncapture_count += 2
+    #diagonal /
+    for x in range(n - 2):
+        for y in range(2, n):
+            if (board[x][y] == tile and board[x+1][y-1] == untile and \
+               board[x+2][y-2] == '.') or \
+            (board[x][y] == '.' and board[x+1][y-1] == untile and \
+               board[x+2][y-2] == tile):
+                capture_count += 1
+
+            if (board[x][y] == tile and board[x+1][y-1] == untile and \
+               board[x+2][y-2] == untile) or \
+               (board[x][y] == untile and \
+               board[x+1][y-1] == untile and board[x+2][y-2] == tile):
+                capture_count += 2
+
+            if (board[x][y] == untile and board[x+1][y-1] == tile and \
+               board[x+2][y-2] == '.') or \
+            (board[x][y] == '.' and board[x+1][y-1] == tile and \
+               board[x+2][y-2] == untile):
+                ncapture_count += 1
+
+            if (board[x][y] == untile and board[x+1][y-1] == tile and \
+               board[x+2][y-2] == tile) or \
+               (board[x][y] == tile and \
+               board[x+1][y-1] == tile and board[x+2][y-2] == untile):
+                ncapture_count += 2
+
+    #diagonal \
+    for x in range(n - 4):
+        for y in range(n - 4):
+            if (board[x][y] == tile and board[x+1][y-1] == untile and \
+               board[x+2][y+2] == '.') or \
+            (board[x][y] == '.' and board[x+1][y-1] == untile and \
+               board[x+2][y+2] == tile):
+                capture_count += 1
+
+            if (board[x][y] == tile and board[x+1][y-1] == untile and \
+               board[x+2][y+2] == untile) or \
+               (board[x][y] == untile and \
+               board[x+1][y-1] == untile and board[x+2][y+2] == tile):
+                capture_count += 2
+
+            if (board[x][y] == untile and board[x+1][y-1] == tile and \
+               board[x+2][y+2] == '.') or \
+            (board[x][y] == '.' and board[x+1][y-1] == tile and \
+               board[x+2][y+2] == untile):
+                ncapture_count += 1
+
+            if (board[x][y] == untile and board[x+1][y-1] == tile and \
+               board[x+2][y+2] == tile) or \
+               (board[x][y] == tile and \
+               board[x+1][y-1] == tile and board[x+2][y+2] == untile):
+                ncapture_count += 2
+
+    return capture_count - ncapture_count
+
+
+'''-----------------------------------------------Heuristic II------------------------------------------------------'''
+##determine the value of a state, based on whether the next available state allows for Trias, or block Trias.
+def heuristic2(board):
+    tria_count = 0
+    ntria_count = 0
+
+    tile = '1'
+    untile = '0'
+
+    #check horizontal spaces for 2 in a rows or block 3 in a rows
+    for y in range(n):
+        for x in range(n-4):
+            if (board[x][y] == '.') and (board[x+1][y] == tile) and \
+               (board[x+2][y] == '.'):
+                tria_count += 1
+
+            if (board[x][y] == '.') and (board[x+1][y] == tile) and \
+               (board[x+2][y] == tile and board[x+3][y] == '.'):
+                tria_count += 2
+
+            if (board[x][y] == '.') and (board[x+1][y] == tile) and \
+               (board[x+2][y] == tile and board[x+3][y] == tile) and \
+               board[x+4][y] == '.':
+                tria_count += 3
+
+            if (board[x][y] == '.') and (board[x+1][y] == untile) and \
+               (board[x+2][y] == '.'):
+                ntria_count += 1
+
+            if (board[x][y] == '.') and (board[x+1][y] == untile) and \
+               (board[x+2][y] == untile and board[x+3][y] == '.'):
+                ntria_count += 2
+
+            if (board[x][y] == '.') and (board[x+1][y] == untile) and \
+               (board[x+2][y] == untile and board[x+3][y] == untile) and \
+               board[x+4][y] == '.':
+                ntria_count += 3
+
+    #check vertical spaces for 2 in a rows or block 3 in a rows
+    for x in range(n):
+        for y in range(n-4):
+            if (board[x][y] == '.' and board[x][y+1] == tile) and \
+               (board[x][y+2] == '.'):
+                tria_count += 1
+
+            if (board[x][y] == '.' and board[x][y+1] == tile) and \
+               (board[x][y+2] == tile and board[x][y+3] == '.'):
+                tria_count += 2
+
+            if (board[x][y] == '.' and board[x][y+1] == tile) and \
+               (board[x][y+2] == tile and board[x][y+3] == tile) and \
+               (board[x][y+4] == '.'):
+                tria_count += 3
+
+            if (board[x][y] == '.' and board[x][y+1] == untile) and \
+               (board[x][y+2] == '.'):
+                ntria_count += 1
+
+            if (board[x][y] == '.' and board[x][y+1] == untile) and \
+               (board[x][y+2] == untile and board[x][y+3] == '.'):
+                ntria_count += 2
+
+            if (board[x][y] == '.' and board[x][y+1] == untile) and \
+               (board[x][y+2] == untile and board[x][y+3] == untile) and \
+               (board[x][y+4] == '.'):
+                ntria_count += 3
+
+    #check diagonal /
+    for x in range(n - 4):
+        for y in range(4, n):
+            if (board[x][y] == '.' and board[x][y] == tile) and \
+               (board[x+1][y-1] == '.'):
+                tria_count += 1
+
+            if (board[x][y] == '.' and board[x][y] == tile) and \
+               (board[x+1][y-1] == tile and board[x+2][y-2] == '.'):
+                tria_count += 2
+
+            if (board[x][y] == '.' and board[x][y] == tile) and \
+               (board[x+1][y-1] == tile and board[x+2][y-2] == tile) and \
+               (board[x+3][y-3] == '.'):
+                tria_count += 3
+
+            if (board[x][y] == '.' and board[x][y] == untile) and \
+               (board[x+1][y-1] == '.'):
+                ntria_count += 1
+
+            if (board[x][y] == '.' and board[x][y] == untile) and \
+               (board[x+1][y-1] == untile and board[x+2][y-2] == '.'):
+                ntria_count += 2
+
+            if (board[x][y] == '.' and board[x][y] == untile) and \
+               (board[x+1][y-1] == untile and board[x+2][y-2] == untile) and \
+               (board[x+3][y-3] == '.'):
+                ntria_count += 3
+
+    #check diagonal \
+    for x in range(n - 4):
+        for y in range(n - 4):
+            if (board[x][y] == '.' and board[x+1][y+1] == tile) and \
+               (board[x+2][y+2] == '.'):
+                tria_count += 1
+
+            if (board[x][y] == '.' and board[x+1][y+1] == tile) and \
+               (board[x+2][y+2] == tile and  board[x+3][y+3] == '.'):
+                tria_count += 2
+
+            if (board[x][y] == '.' and board[x+1][y+1] == tile) and \
+               (board[x+2][y+2] == tile and  board[x+3][y+3] == tile) and \
+               (board[x+4][y+4] == '.'):
+                tria_count += 3
+
+            if (board[x][y] == '.' and board[x+1][y+1] == untile) and \
+               (board[x+2][y+2] == '.'):
+                ntria_count += 1
+
+            if (board[x][y] == '.' and board[x+1][y+1] == untile) and \
+               (board[x+2][y+2] == untile and  board[x+3][y+3] == '.'):
+                ntria_count += 2
+
+            if (board[x][y] == '.' and board[x+1][y+1] == untile) and \
+               (board[x+2][y+2] == untile and  board[x+3][y+3] == untile) and \
+               (board[x+4][y+4] == '.'):
+                ntria_count += 3
+
+    return tria_count - ntria_count
+    
+'''-----------------------------------------------Heuristic I------------------------------------------------------'''
+##determine the value of a state, based on number of availble 5-row win states.
+def heuristic1(board):
     ##looks at the isWinner function to find # of possible MAX wins - # of possible MIN wins
     win_count = 0
     lose_count = 0
@@ -205,7 +452,10 @@ def drawBoard(board):
 
     ##add in row
     for row in range(n):
-        boarder += "$$%d | " %row
+        if row >= 9:
+            boarder += "$$%d| " %(row+1)
+        else:
+            boarder += "$$%d | " %(row+1)
         for col in range(n):
             if board[row][col] == '1':
                 boarder += u"\u25CF "
@@ -244,8 +494,6 @@ def isCaptureMove(board, player, move):
         unplayer = '1'
     else:
         unplayer = '0'
-
-    captured = False
 
     ##check horizontal captures
     if (move[1] > 2 and \
