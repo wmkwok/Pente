@@ -6,6 +6,7 @@ import random
 import copy
 import sys
 import os
+import timeit
 from gameAI import *
 
 def main():
@@ -27,7 +28,7 @@ def main():
         ##loop for turns
         while True:
             if turn == 'computer':
-                os.system('clear')
+                ##os.system('clear')
                 print "Computer is thinking..."
                 drawBoard(gameBoard)
                 move = getComputerMove(gameBoard, computerTile)
@@ -36,8 +37,8 @@ def main():
                     return
                 if isValidMove(gameBoard, move):
                     makeCMove(gameBoard, computerTile, move)
-                    os.system('clear')
-                    drawBoard(gameBoard)
+                    ##os.system('clear')
+                    ##drawBoard(gameBoard)
                 else:
                     continue
                 if isWinner(gameBoard, computerTile):
@@ -46,7 +47,7 @@ def main():
                 turn = 'human'
                 
             else:
-                os.system('clear')
+                ##os.system('clear')
                 drawBoard(gameBoard)
                 move = getHumanMove(gameBoard, humanTile)
                 if isValidMove(gameBoard, move):

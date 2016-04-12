@@ -8,6 +8,13 @@ The objective of the game is to either get 5 consecutive pieces on a board, or c
 2. To capture, the player must place a piece which makes a pair bracketed by the player's. For example, in a certain row [a, b, b, a]
 3. A player cannot cause themselves to be capture. For example, placing a 'b' where the row is [a, _, b, a]
 
+###Heuristics
+I. Based on how many win states are still available
+II. Based on maximizing Trias
+III. Based on minimizing Tesseras
+IV. ???
+V. ???
+
 
 ###Game files
 1. Pente.py
