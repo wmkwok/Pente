@@ -11,7 +11,7 @@ from gameAI import *
 from testAI import *
 def main():
     print('PENTE')
-    
+    count = 0
     ##game loop
     while True:
         ##figure out who goes first
@@ -37,6 +37,7 @@ def main():
                     return
                 if isValidMove(gameBoard, move):
                     makeCMove(gameBoard, computerTile, move)
+                    total_moves += 1
                     ##os.system('clear')
                     ##drawBoard(gameBoard)
                 else:
@@ -52,6 +53,7 @@ def main():
                 move = getHumanMove(gameBoard, humanTile)
                 if isValidMove(gameBoard, move):
                     makeCMove(gameBoard, humanTile, move)
+                    total_moves += 1                    
                 else:
                     continue
                 if isWinner(gameBoard, humanTile):
@@ -64,13 +66,20 @@ def main():
                 break
             
         drawBoard(gameBoard)
+        f = open('onevstria.txt', 'a')
         if winner == 'tie':
-            print "There is a tie."
+            f.write("%d:tie:%d" %(count, total_moves))
         else:
-            print "The winner is: ", winner
+            f.write("%d:%s:%d" %(count, winner, total_moves))
+        f.close()
+        if count == 100:
+            break
+
+'''
         if not playAgain():
             break
         sys.exit()
+'''
 
 def playAgain():
     print("Would you like to play again? (yes or no)")
@@ -83,6 +92,7 @@ def whoGoesFirst():
     else:
         return 'human'
 
+'''
 def getHumanMove(board, tile):
     ##asks the player to make a move
     while True:
@@ -109,6 +119,7 @@ def getHumanMove(board, tile):
             print moveX, moveY
             if isValidMove(board, (moveX, moveY)):
                 return (moveX, moveY)
- 
+''' 
+
 if __name__ == '__main__':
     main()
