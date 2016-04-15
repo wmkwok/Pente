@@ -27,6 +27,7 @@ tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
 def getComputerMove(board, tile, heur):
     global prevMove
     prevMove = AlphaBeta(board, 3, tile, heur)
+    print "getComputerMove returning: ", prevMove
     return prevMove
 '''
     for x in range(n):
