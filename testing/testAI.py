@@ -55,9 +55,9 @@ def HmaxValue(board, depth, player, alpha, beta):
     ##return heuristic if leaf
     if depth == 0:
         if player == '1':
-            return (heuristicTria(board[0]), board[1])
+            return (heuristicCapture(board[0]), board[1])
         else:
-            return (heuristicTria(board[0]) * -1, board[1])
+            return (heuristicCapture(board[0]) * -1, board[1])
     ##for each children find next
     for succ in generateChildren(board[0], player):
         m = HminValue(succ, depth-1, unplayer, alpha, beta)
@@ -77,9 +77,9 @@ def HminValue(board, depth, player, alpha, beta):
     ##return heuristic if leaf
     if depth == 0:
         if player == '1':
-            return (heuristicTria(board[0]), board[1])
+            return (heuristicCapture(board[0]), board[1])
         else:
-            return (heuristicTria(board[0]) * -1, board[1])
+            return (heuristicCapture(board[0]) * -1, board[1])
     ##for each children find next
     for succ in generateChildren(board[0], player):
         m = HmaxValue(succ, depth-1 , unplayer, alpha, beta)

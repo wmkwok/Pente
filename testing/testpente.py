@@ -8,12 +8,13 @@ import sys
 import os
 import timeit
 from gameAI import *
-from testAI import *
+
 def main():
     print('PENTE')
-    count = 0
     ##game loop
     while True:
+        count = 0
+        total_moves = 0
         ##figure out who goes first
         turn = whoGoesFirst()
         ##0 is black and 1 is white, white always goes first
@@ -31,13 +32,14 @@ def main():
                 ##os.system('clear')
                 print "Computer is thinking..."
                 drawBoard(gameBoard)
-                move = getComputerMove(gameBoard, computerTile)
+                move = getComputerMove(gameBoard, computerTile, heuristicI) ##modified to accept a heuristic
                 while move is None:
                     print 'Move is None type error.'
                     return
                 if isValidMove(gameBoard, move):
                     makeCMove(gameBoard, computerTile, move)
                     total_moves += 1
+                    print "computer move: ", move
                     ##os.system('clear')
                     ##drawBoard(gameBoard)
                 else:
@@ -50,10 +52,11 @@ def main():
             else:
                 ##os.system('clear')
                 drawBoard(gameBoard)
-                move = getHumanMove(gameBoard, humanTile)
+                move = getComputerMove(gameBoard, humanTile, heuristicII) ##originally move = getHumanMove(gameBoard, humanTile)
                 if isValidMove(gameBoard, move):
                     makeCMove(gameBoard, humanTile, move)
                     total_moves += 1                    
+                    print "test h moves: ", move
                 else:
                     continue
                 if isWinner(gameBoard, humanTile):

@@ -24,9 +24,9 @@ tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
 '''---------------------------------------------------AI functions-------------------------------------------------'''
 ##These functions are going to be part of what determines which moves to be made by the computer
 
-def getComputerMove(board, tile):
+def getComputerMove(board, tile, heur):
     global prevMove
-    prevMove = AlphaBeta(board, 3, tile)
+    prevMove = AlphaBeta(board, 3, tile, heur)
     return prevMove
 '''
     for x in range(n):
@@ -51,14 +51,14 @@ def generateChildren(board, player):
 
 ##I think we should take out depth at the end.
 ## also, would it be nice to do another search alg? or is AB always good?
-def AlphaBeta(board, depth, player):
+def AlphaBeta(board, depth, player, heur):
     tik=timeit.default_timer()
-    m = minValue((board, -1), depth, player, (float("-inf"), -1), (float("inf"), -1))
+    m = minValue((board, -1), depth, player, (float("-inf"), -1), (float("inf"), -1), heur)
     tok=timeit.default_timer()
     print "Processing time: ", tok-tik
     return m[1]
 
-def maxValue(board, depth, player, alpha, beta):
+def maxValue(board, depth, player, alpha, beta, heur):
     ##figure the opposite tile
     if player == '1':
         unplayer = '0'
@@ -68,19 +68,19 @@ def maxValue(board, depth, player, alpha, beta):
     ##return heuristic if leaf
     if depth == 0:
         if player == '1':
-            return (heuristic(board[0]), board[1])
+            return (heur(board[0]), board[1])
         else:
-            return (heuristic(board[0]) * -1, board[1])
+            return (heur(board[0]) * -1, board[1])
     ##for each children find next
     for succ in generateChildren(board[0], player):
-        m = minValue(succ, depth-1, unplayer, alpha, beta)
+        m = minValue(succ, depth-1, unplayer, alpha, beta, heur)
         if m[0] > alpha[0]:
             alpha = m
         if alpha[0] >= beta[0]:
             return alpha
     return alpha
     
-def minValue(board, depth, player, alpha, beta):
+def minValue(board, depth, player, alpha, beta, heur):
     ##figure the opposite tile
     if player == '1':
         unplayer = '0'
@@ -90,12 +90,12 @@ def minValue(board, depth, player, alpha, beta):
     ##return heuristic if leaf
     if depth == 0:
         if player == '1':
-            return (heuristic(board[0]), board[1])
+            return (heur(board[0]), board[1])
         else:
-            return (heuristic(board[0]) * -1, board[1])
+            return (heur(board[0]) * -1, board[1])
     ##for each children find next
     for succ in generateChildren(board[0], player):
-        m = maxValue(succ, depth-1 , unplayer, alpha, beta)
+        m = maxValue(succ, depth-1 , unplayer, alpha, beta, heur)
         if m[0] < beta[0]:
             beta = m
         if alpha[0] >= beta[0]:
@@ -350,7 +350,7 @@ def heuristicII(board):
     
 '''-----------------------------------------------Heuristic I------------------------------------------------------'''
 ##determine the value of a state, based on number of availble 5-row win states.
-def heuristic(board):
+def heuristicI(board):
     ##looks at the isWinner function to find # of possible MAX wins - # of possible MIN wins
     win_count = 0
     lose_count = 0
