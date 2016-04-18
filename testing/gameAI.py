@@ -1,3 +1,4 @@
+import pdb
 import sys
 import copy
 import timeit
@@ -23,6 +24,8 @@ tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
 
 '''---------------------------------------------------AI functions-------------------------------------------------'''
 ##These functions are going to be part of what determines which moves to be made by the computer
+
+pdb.set_trace()
 
 def getComputerMove(board, tile, heur):
     global prevMove

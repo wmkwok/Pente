@@ -1,7 +1,7 @@
 ##Pente
 ## By Wendy Kwok and Liu Yangjun
 # A texted based version of Pente board game
-
+import pdb
 import random
 import copy
 import sys
