@@ -25,7 +25,7 @@ tboard = [['0', '1', '0', '1', '0', '0', '1', '0', '1', '0'], \
 '''---------------------------------------------------AI functions-------------------------------------------------'''
 ##These functions are going to be part of what determines which moves to be made by the computer
 
-pdb.set_trace()
+##pdb.set_trace()
 
 def getComputerMove(board, tile, heur):
     global prevMove
@@ -573,12 +573,12 @@ def makeMove(board, player, move):
 def makeCMove(board, player, move):
     global wcaptures, bcaptures
     captures = isCaptureMove(board, player, move)
-    board[move[0]][move[1]] = player
     if captures != 0:
         if player == '0':
             wcaptures += captures
         else:
             bcaptures += captures
+    board[move[0]][move[1]] = player
     print bcaptures, wcaptures
 
 

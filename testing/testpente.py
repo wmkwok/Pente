@@ -36,14 +36,14 @@ def main():
                 while move is None:
                     print 'Move is None type error.'
                     return
-                if isValidMove(gameBoard, move):
-                    makeCMove(gameBoard, computerTile, move)
-                    total_moves += 1
-                    print "computer move: ", move
-                    ##os.system('clear')
-                    ##drawBoard(gameBoard)
-                else:
-                    continue
+#            if isValidMove(gameBoard, move):
+                makeCMove(gameBoard, computerTile, move)
+                total_moves += 1
+                print "computer move: ", move
+                ##os.system('clear')
+                ##drawBoard(gameBoard)
+#                else:
+#                    continue
                 if isWinner(gameBoard, computerTile):
                     winner = 'computer'
                     break
@@ -52,13 +52,13 @@ def main():
             else:
                 ##os.system('clear')
                 drawBoard(gameBoard)
-                move = getComputerMove(gameBoard, humanTile, heuristicII) ##originally move = getHumanMove(gameBoard, humanTile)
-                if isValidMove(gameBoard, move):
-                    makeCMove(gameBoard, humanTile, move)
-                    total_moves += 1                    
-                    print "test h moves: ", move
-                else:
-                    continue
+                move = getComputerMove(gameBoard, humanTile, heuristicIII) ##originally move = getHumanMove(gameBoard, humanTile)
+#                if isValidMove(gameBoard, move):
+                makeCMove(gameBoard, humanTile, move)
+                total_moves += 1                    
+                print "test h moves: ", move
+#               else:
+#                    continue
                 if isWinner(gameBoard, humanTile):
                     winner = 'human'
                     break
@@ -71,18 +71,18 @@ def main():
         drawBoard(gameBoard)
         f = open('onevstria.txt', 'a')
         if winner == 'tie':
-            f.write("%d:tie:%d" %(count, total_moves))
+            f.write("%d:tie:%d\n" %(count, total_moves))
+            f.close()
+            break
         else:
-            f.write("%d:%s:%d" %(count, winner, total_moves))
-        f.close()
-        if count == 100:
+            f.write("%d:%s:%d\n" %(count, winner, total_moves))
+            f.close()
             break
 
-'''
         if not playAgain():
             break
         sys.exit()
-'''
+
 
 def playAgain():
     print("Would you like to play again? (yes or no)")
